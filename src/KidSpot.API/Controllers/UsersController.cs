@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using KidSpot.Application.Common;
+using KidSpot.Application.Places.Commands;
 using KidSpot.Application.Users.Commands;
 using KidSpot.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,24 @@ public class UsersController : ControllerBase
 
         var userDto = new UserDto(user.Id, user.Email, user.Name, user.AvatarUrl, user.IsAdmin);
         return Ok(ApiResponse<UserDto>.Success(userDto));
+    }
+
+    [HttpGet("me/saved-places")]
+    public async Task<IActionResult> GetSavedPlaces(CancellationToken cancellationToken)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized(ApiResponse<object>.Failure("UNAUTHORIZED", "User not authenticated."));
+
+        var user = await _userRepository.GetByIdAsync(userId.Value, cancellationToken);
+        if (user is null)
+            return NotFound(ApiResponse<object>.Failure("NOT_FOUND", "User not found."));
+
+        var placeIds = user.SavedPlaces.Select(sp => sp.PlaceId);
+        var places = await _placeRepository.GetByIdsAsync(placeIds, cancellationToken);
+        var dtos = places.Select(CreatePlaceHandler.MapToDto).ToList();
+
+        return Ok(ApiResponse<List<PlaceDto>>.Success(dtos));
     }
 
     [HttpPost("me/saved-places/{placeId:guid}")]

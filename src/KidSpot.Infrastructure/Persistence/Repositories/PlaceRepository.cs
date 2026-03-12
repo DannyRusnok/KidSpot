@@ -21,6 +21,17 @@ public class PlaceRepository : IPlaceRepository
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Place>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+        if (idList.Count == 0) return Array.Empty<Place>();
+
+        return await _context.Places
+            .Where(p => idList.Contains(p.Id))
+            .OrderBy(p => p.Name)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyList<Place>> GetByCityAsync(
         string city,
         PlaceType? type,

@@ -13,6 +13,12 @@ export function Header() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
+              <a
+                href="/saved"
+                className="text-sm text-gray-600 hover:text-gray-800 font-medium"
+              >
+                Moje místa
+              </a>
               {user.isAdmin && (
                 <a
                   href="/admin"

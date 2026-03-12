@@ -1,5 +1,5 @@
 import api from './client';
-import type { ApiResponse, AuthResult, UserDto } from '../types';
+import type { ApiResponse, AuthResult, PlaceDto, UserDto } from '../types';
 
 export async function loginWithGoogle(idToken: string) {
   const { data } = await api.post<ApiResponse<AuthResult>>('/auth/google', { idToken });
@@ -13,6 +13,11 @@ export async function logout() {
 
 export async function fetchMe() {
   const { data } = await api.get<ApiResponse<UserDto>>('/users/me');
+  return data;
+}
+
+export async function fetchSavedPlaces() {
+  const { data } = await api.get<ApiResponse<PlaceDto[]>>('/users/me/saved-places');
   return data;
 }
 
