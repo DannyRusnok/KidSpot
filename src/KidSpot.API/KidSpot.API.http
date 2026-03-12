@@ -1,0 +1,6 @@
+@KidSpot.API_HostAddress = http://localhost:5018
+
+GET {{KidSpot.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
