@@ -2,7 +2,6 @@
 
 interface ImportMetaEnv {
   readonly VITE_GOOGLE_CLIENT_ID: string;
-  readonly VITE_GOOGLE_MAPS_KEY: string;
 }
 
 interface ImportMeta {
