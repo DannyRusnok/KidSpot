@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using KidSpot.API.Middleware;
 using KidSpot.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -78,6 +79,22 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Seed database in development
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<KidSpot.Infrastructure.Persistence.KidSpotDbContext>();
+    db.Database.Migrate();
+
+    if (!db.Places.Any())
+    {
+        var places = KidSpot.Infrastructure.Persistence.SeedData.GetPlaces();
+        db.Places.AddRange(places);
+        db.SaveChanges();
+        app.Logger.LogInformation("Seeded {Count} places", places.Count);
+    }
+}
 
 // Middleware pipeline
 app.UseMiddleware<ErrorHandlingMiddleware>();

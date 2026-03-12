@@ -68,3 +68,20 @@ export interface PlaceFilters {
   ageTo?: number;
   type?: PlaceType;
 }
+
+export interface CreatePlaceRequest {
+  name: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  address: string;
+  city: string;
+  country: string;
+  type: PlaceType;
+  changingTable: boolean;
+  kidsMenu: boolean;
+  strollerFriendly: boolean;
+  ageFrom: number;
+  ageTo: number;
+  googlePlaceId?: string | null;
+}

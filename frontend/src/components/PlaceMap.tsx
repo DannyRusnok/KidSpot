@@ -18,30 +18,28 @@ const PLACE_TYPE_COLORS: Record<string, string> = {
 
 const DEFAULT_CENTER: [number, number] = [50.0755, 14.4378]; // Praha
 
-function RecenterMap({ places }: { places: PlaceDto[] }) {
+function RecenterMap({ places, cityCenter }: { places: PlaceDto[]; cityCenter: { lat: number; lng: number } | null }) {
   const map = useMap();
 
   useEffect(() => {
-    if (places.length > 0) {
+    if (cityCenter) {
+      map.setView([cityCenter.lat, cityCenter.lng], 13);
+    } else if (places.length > 0) {
       map.setView([places[0].latitude, places[0].longitude], 13);
     }
-  }, [places, map]);
+  }, [places, cityCenter, map]);
 
   return null;
 }
 
 export function PlaceMap() {
-  const { places } = usePlacesStore();
+  const { places, cityCenter } = usePlacesStore();
   const [activePlace, setActivePlace] = useState<PlaceDto | null>(null);
   const navigate = useNavigate();
 
-  const center: [number, number] = places.length > 0
-    ? [places[0].latitude, places[0].longitude]
-    : DEFAULT_CENTER;
-
   return (
     <MapContainer
-      center={center}
+      center={DEFAULT_CENTER}
       zoom={13}
       className="w-full h-full"
       scrollWheelZoom={true}
@@ -51,7 +49,7 @@ export function PlaceMap() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <RecenterMap places={places} />
+      <RecenterMap places={places} cityCenter={cityCenter} />
 
       {places.map((place) => (
         <CircleMarker

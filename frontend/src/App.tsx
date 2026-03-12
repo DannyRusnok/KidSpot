@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { PlaceDetailPage } from './pages/PlaceDetailPage';
+import { AdminPage } from './pages/AdminPage';
 import { useAuthStore } from './store/useAuthStore';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/place/:id" element={<PlaceDetailPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </div>
     </BrowserRouter>

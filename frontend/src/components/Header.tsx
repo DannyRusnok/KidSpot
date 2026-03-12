@@ -13,6 +13,14 @@ export function Header() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
+              {user.isAdmin && (
+                <a
+                  href="/admin"
+                  className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                  Admin
+                </a>
+              )}
               <div className="flex items-center gap-2">
                 {user.avatarUrl && (
                   <img
